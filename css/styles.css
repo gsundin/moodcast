@@ -1,0 +1,772 @@
+:root {
+    --text-color: #ffffff; /* Default text color, will be dynamically changed */
+    --is-daytime: 1; /* 1 for day, 0 for night - controlled by JS */
+    --text-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Default text shadow, will be adjusted for snow */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    transition: background-color 2s ease;
+}
+
+.container {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 5vh;
+    z-index: 10;
+    color: var(--text-color);
+    text-shadow: var(--text-shadow);
+    transition: color 1s ease, text-shadow 1s ease;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    text-shadow: var(--text-shadow);
+}
+
+#location-display, #weather-display {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    text-shadow: var(--text-shadow);
+}
+
+#animation-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.animation-element {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: background 2s ease-in-out;
+}
+
+#background {
+    transition: background-color 2s ease;
+}
+
+#foreground {
+    z-index: 1;
+}
+
+#effects {
+    z-index: 2;
+}
+
+/* Temperature-based styles */
+.warm {
+    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    background-size: 200% 200%;
+    animation: temperature-pulse 10s infinite alternate;
+}
+
+.hot {
+    background: linear-gradient(120deg, #f12711 0%, #f5af19 100%);
+    background-size: 200% 200%;
+    animation: temperature-pulse 8s infinite alternate;
+}
+
+.cool {
+    background: linear-gradient(120deg, #8e2de2 0%, #4a00e0 100%);
+    background-size: 200% 200%;
+    animation: temperature-pulse 15s infinite alternate;
+}
+
+.cold {
+    background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+    background-size: 200% 200%;
+    animation: temperature-pulse 20s infinite alternate;
+}
+
+/* Enhanced weather condition effects */
+.humid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 100%);
+    animation: condensation 15s infinite;
+    pointer-events: none;
+    opacity: calc(0.3 + (0.3 * var(--is-daytime)));
+}
+
+.clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0.2) 10%, 
+                rgba(255, 255, 255, 0.15) 20%, 
+                rgba(255, 255, 255, 0.1) 30%, 
+                rgba(255, 255, 255, 0.05) 60%, 
+                rgba(255, 255, 255, 0) 100%);
+    opacity: calc(0.5 + (0.3 * var(--is-daytime)));
+    animation: clouds 60s linear infinite;
+    z-index: 5;
+}
+
+/* Add cloud shapes */
+.clouds::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 30% 10%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 20%),
+        radial-gradient(circle at 70% 20%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 20%),
+        radial-gradient(circle at 40% 40%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 30%),
+        radial-gradient(circle at 80% 60%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 25%);
+    animation: move-clouds 80s linear infinite;
+}
+
+.fog {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.4);
+    animation: fog 120s linear infinite;
+    z-index: 4;
+    opacity: calc(0.3 + (0.1 * var(--is-daytime)));
+}
+
+/* Add fog layers */
+.fog::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background-image: 
+        linear-gradient(to right, 
+            rgba(255,255,255,0) 0%, 
+            rgba(255,255,255,0.3) 25%, 
+            rgba(255,255,255,0.3) 75%, 
+            rgba(255,255,255,0) 100%);
+    animation: move-fog 45s linear infinite;
+}
+
+/* Smoother wind animations */
+.wind-high, .wind-low {
+    position: relative;
+}
+
+.wind-high::after, .wind-low::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-image: 
+        linear-gradient(90deg, 
+            rgba(255,255,255,0) 0%, 
+            rgba(255,255,255,0.05) 25%, 
+            rgba(255,255,255,0.1) 50%, 
+            rgba(255,255,255,0.05) 75%, 
+            rgba(255,255,255,0) 100%);
+    z-index: 3;
+}
+
+.wind-high::after {
+    animation: wind-move 12s linear infinite;
+}
+
+.wind-low::after {
+    animation: wind-move 30s linear infinite;
+}
+
+.snow::before, .rain::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: 0;
+    width: 100%;
+    height: calc(100% + 200px);
+    pointer-events: none;
+    z-index: 6;
+}
+
+.snow::before {
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 60%) 0 0 / 12px 12px,
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 60%) 25px 15px / 10px 10px,
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%) 40px 20px / 8px 8px,
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%) 60px 5px / 14px 14px;
+    background-repeat: repeat;
+    animation: snow-fall 25s linear infinite;
+}
+
+.rain::before {
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(180,220,255,0.7) 0%, rgba(180,220,255,0) 60%) 0 0 / 8px 15px,
+        radial-gradient(circle at 50% 50%, rgba(180,220,255,0.6) 0%, rgba(180,220,255,0) 60%) 30px 20px / 7px 12px,
+        radial-gradient(circle at 50% 50%, rgba(180,220,255,0.8) 0%, rgba(180,220,255,0) 70%) 50px 10px / 6px 14px,
+        radial-gradient(circle at 50% 50%, rgba(180,220,255,0.5) 0%, rgba(180,220,255,0) 50%) 80px 5px / 9px 16px;
+    background-repeat: repeat;
+    animation: rain-fall 15s linear infinite;
+}
+
+/* Snow and Rain Animation Styles */
+#snowflake-container, #raindrop-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 6;
+    pointer-events: none;
+}
+
+.snowflake {
+    --size: 1vw;
+    width: var(--size);
+    height: var(--size);
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: -5vh;
+    z-index: 6;
+    opacity: 0.8;
+}
+
+.raindrop {
+    --size: 0.15vw;
+    width: var(--size);
+    height: calc(var(--size) * 4);
+    background: rgba(180, 220, 255, 0.7);
+    border-radius: 50%;
+    position: absolute;
+    top: -5vh;
+    z-index: 6;
+    opacity: 0.7;
+}
+
+.snowflake.blur {
+    filter: blur(1px);
+}
+
+.raindrop.blur {
+    filter: blur(0.5px);
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translate3d(var(--left-ini), 0, 0);
+    }
+    100% {
+        transform: translate3d(var(--left-end), 110vh, 0);
+    }
+}
+
+@keyframes rainfall {
+    0% {
+        transform: translate3d(var(--left-ini), 0, 0) rotate(10deg);
+    }
+    100% {
+        transform: translate3d(var(--left-end), 110vh, 0) rotate(10deg);
+    }
+}
+
+/* Attribution Text Styles */
+.attribution-btn a {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+    text-decoration: none;
+}
+
+.attribution-btn a:hover {
+    opacity: 1;
+    color: white;
+    text-decoration: none;
+}
+
+.attribution-btn a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+/* Debug Mode Styles */
+.debug-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 1.0);
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.debug-btn:hover {
+    opacity: 1;
+    color: white;
+}
+
+.debug-panel {
+    display: none;
+    position: absolute;
+    bottom: 50px;
+    right: 10px;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    padding: 15px;
+    color: white;
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.debug-panel h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.input-group input {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: none;
+    border-radius: 3px;
+}
+
+.input-group button {
+    padding: 8px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.input-group button:hover {
+    background-color: #2980b9;
+}
+
+/* Enhanced Animations */
+@keyframes warm-pulse {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+@keyframes hot-pulse {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 100%;
+    }
+}
+
+@keyframes cool-pulse {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+@keyframes cold-pulse {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+@keyframes condensation {
+    0%, 100% {
+        opacity: 0.2;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes clouds {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes move-clouds {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes fog {
+    0% {
+        opacity: 0.2;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0.2;
+    }
+}
+
+@keyframes move-fog {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-33.33%);
+    }
+}
+
+@keyframes wind-move {
+    0% {
+        transform: translateX(-50%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes snow {
+    0% {
+        background-position: 0px 0px, 25px 25px;
+    }
+    100% {
+        background-position: 50px 500px, 75px 525px;
+    }
+}
+
+@keyframes rain {
+    0% {
+        background-position: 0px -100px, 30px -70px, 50px -80px, 80px -90px, 100px -85px;
+    }
+    100% {
+        background-position: 0px 100vh, 30px 100vh, 50px 100vh, 80px 100vh, 100px 100vh;
+    }
+}
+
+@keyframes temperature-pulse {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 100%;
+    }
+}
+
+@keyframes snow-fall {
+    0% {
+        background-position: 
+            0px -100px, 
+            25px -85px, 
+            40px -90px, 
+            60px -75px;
+    }
+    100% {
+        background-position: 
+            100px 1000px, 
+            125px 985px, 
+            140px 990px, 
+            160px 975px;
+    }
+}
+
+@keyframes rain-fall {
+    0% {
+        background-position: 
+            0px -100px, 
+            30px -90px, 
+            50px -80px, 
+            80px -95px;
+    }
+    100% {
+        background-position: 
+            30px 1000px, 
+            60px 990px, 
+            80px 980px, 
+            110px 995px;
+    }
+}
+
+/* Temperature-specific effects */
+.frost-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, transparent 20%),
+        linear-gradient(to top, rgba(255, 255, 255, 0.2) 0%, transparent 20%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, transparent 20%),
+        linear-gradient(to left, rgba(255, 255, 255, 0.2) 0%, transparent 20%);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.frost-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 15%),
+        radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 20%),
+        radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.3) 0%, transparent 25%),
+        radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.3) 0%, transparent 15%);
+}
+
+.light-wind {
+    position: relative;
+    overflow: hidden;
+}
+
+.light-wind::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.03) 20%, 
+        rgba(255,255,255,0.06) 40%, 
+        rgba(255,255,255,0.03) 60%, 
+        rgba(255,255,255,0) 80%);
+    animation: gentle-wind 15s linear infinite;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.sun-glints {
+    position: relative;
+    overflow: hidden;
+}
+
+.sun-glints::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.7) 0%, transparent 3%),
+        radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.6) 0%, transparent 2%),
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.5) 0%, transparent 2.5%),
+        radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 3%),
+        radial-gradient(circle at 50% 60%, rgba(255, 255, 255, 0.5) 0%, transparent 2%);
+    animation: sun-glint 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.heat-shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.heat-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><filter id="distortion" x="0" y="0" width="100%" height="100%"><feTurbulence baseFrequency="0.01 0.05" numOctaves="2" seed="1" result="turbulence"/><feDisplacementMap in="SourceGraphic" in2="turbulence" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter><rect x="0" y="0" width="100" height="100" fill="transparent" filter="url(#distortion)"/></svg>');
+    animation: heat-wave 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.3;
+}
+
+/* Animation keyframes for new effects */
+@keyframes gentle-wind {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(33.33%);
+    }
+}
+
+@keyframes sun-glint {
+    0%, 100% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes heat-wave {
+    0%, 100% {
+        transform: translateY(0) scale(1.01);
+    }
+    50% {
+        transform: translateY(5px) scale(1);
+    }
+}
+
+/* Slider styles */
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: #4e4e4e;
+    outline: none;
+    margin: 10px 0;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #3498db;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #3498db;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    background: #2980b9;
+}
+
+.slider::-moz-range-thumb:hover {
+    background: #2980b9;
+}
+
+/* Toggle button styles */
+.toggle-container {
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px 0;
+}
+
+.toggle-btn {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #333;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-btn.night-mode {
+    background-color: #1a1a2e;
+}
+
+.toggle-btn.day-mode {
+    background-color: #3498db;
+}
+
+.toggle-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* Night mode specific adjustments */
+@media (prefers-color-scheme: dark) {
+    .debug-panel {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* Day mode specific adjustments */
+@media (prefers-color-scheme: light) {
+    .debug-panel {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+}

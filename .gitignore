@@ -1,0 +1,19 @@
+# Ignore API configuration file that contains private keys
+js/api-config.js
+
+# Ignore typical node modules and build files
+node_modules/
+dist/
+build/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore editor settings
+.vscode/
+.idea/
+*.sublime-*
+
+# Ignore logs
+*.log
