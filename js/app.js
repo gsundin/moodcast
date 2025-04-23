@@ -82,8 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(locationData => {
                 console.log("Location data received:", locationData);
                 // Display location information
-                const { city, region, country } = locationData;
-                locationDisplay.textContent = `${city}, ${region}, ${country}`;
+                const { city, region } = locationData;
+                locationDisplay.textContent = `${city}, ${region}`;
                 
                 // Get weather data for the location
                 return getWeatherData(locationData);
