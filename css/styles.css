@@ -380,7 +380,7 @@ h1 {
     padding: 5px 10px;
     background-color: transparent;
     border: none;
-    color: rgba(255, 255, 255, 1.0);
+    color: rgba(255, 255, 255, 0);
     cursor: pointer;
     font-size: 12px;
     opacity: 0.5;
