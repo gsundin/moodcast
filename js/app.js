@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // DOM elements
+    const vibeDisplay = document.getElementById('vibe-display');
     const locationDisplay = document.getElementById('location-display');
     const weatherDisplay = document.getElementById('weather-display');
     const background = document.getElementById('background');
@@ -24,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let userForcedDayNight = null; // null = auto, true = day, false = night
 
     console.log("Weather Vibe Check initializing...");
-
+    
     // Initialize app by getting location and weather data
     initializeApp();
 
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Location data received:", locationData);
                 // Display location information
                 const { city, region } = locationData;
-                locationDisplay.textContent = `${city}`;
+                locationDisplay.textContent = `${city}, ${region}`;
                 
                 // Get weather data for the location
                 return getWeatherData(locationData);
@@ -135,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 
                 // Update location display
-                locationDisplay.textContent = `${locationData.city}`;
+                locationDisplay.textContent = `${locationData.city}, ${locationData.region}`;
                 
                 // Get weather for the new location
                 return getWeatherData(locationData);
@@ -329,6 +330,11 @@ document.addEventListener('DOMContentLoaded', () => {
         currentWeatherData = weatherData;
         
         const { temperature, condition, humidity, windSpeed } = weatherData;
+        
+        // Get and display the appropriate vibe word using the VibeUtils module
+        const vibeWord = VibeUtils.getVibeWord(temperature, condition, weatherData);
+        vibeDisplay.textContent = vibeWord;
+        console.log(`Setting vibe word to: ${vibeWord} for ${temperature}°F, ${condition}`);
         
         // Clear existing classes
         background.className = 'animation-element';

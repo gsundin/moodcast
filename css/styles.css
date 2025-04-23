@@ -83,14 +83,19 @@ h1 {
     }
 }
 
+#location-display, #weather-display {
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
 #weather-display {
     font-size: 1.5rem;
     margin-bottom: 1rem;
     color: var(--text-color);
 }
 
-#location-display {
-    font-size: 4.0rem;
+#vibe-display {
+    font-size: 4rem;
     margin: auto;
     text-align: center;
     color: transparent;

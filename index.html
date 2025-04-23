@@ -11,10 +11,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
     <!-- Include the API config file before the main app.js -->
     <script src="js/api-config.js"></script>
+    <!-- Include vibe utilities -->
+    <script src="js/vibe-utils.js"></script>
 </head>
 <body>
     <div class="container">
-        <div id="location-display">Finding your location...</div>
+        <div id="vibe-display">Finding your location...</div>
         <div id="animation-container">
             <div class="animation-element" id="background"></div>
             <div class="animation-element" id="foreground"></div>
@@ -33,7 +35,7 @@
         
         <!-- Debug panel (hidden by default) -->
         <div id="debug-panel" class="debug-panel">
-            <h3>Debug Mode</h3>
+            <div id="location-display">Finding your location...</div>
             <div id="weather-display"></div>
             <div class="input-group">
                 <label for="zip-input">Enter ZIP/Postal Code:</label>
