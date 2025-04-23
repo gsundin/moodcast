@@ -11,7 +11,7 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Varela Round';
     height: 100vh;
     overflow: hidden;
     position: relative;
@@ -83,12 +83,18 @@ h1 {
     }
 }
 
-#location-display, #weather-display {
-    font-size: 2.5rem;
+#weather-display {
+    font-size: 1.5rem;
     margin-bottom: 1rem;
     color: var(--text-color);
-    text-shadow: var(--text-shadow);
-    animation: lights 5s 750ms linear infinite;
+}
+
+#location-display {
+    font-size: 4.0rem;
+    margin: auto;
+    text-align: center;
+    color: transparent;
+    animation: lights 10s 100ms linear infinite;
 }
 
 #animation-container {

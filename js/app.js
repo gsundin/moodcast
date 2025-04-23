@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Location data received:", locationData);
                 // Display location information
                 const { city, region } = locationData;
-                locationDisplay.textContent = `${city}, ${region}`;
+                locationDisplay.textContent = `${city}`;
                 
                 // Get weather data for the location
                 return getWeatherData(locationData);
@@ -132,11 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const locationData = {
                     city: data.places[0]['place name'],
                     region: data.places[0]['state abbreviation'],
-                    country: data.country
                 };
                 
                 // Update location display
-                locationDisplay.textContent = `${locationData.city}, ${locationData.region}, ${locationData.country}`;
+                locationDisplay.textContent = `${locationData.city}`;
                 
                 // Get weather for the new location
                 return getWeatherData(locationData);
@@ -181,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 city: data.city,
                 region: data.region,
-                country: data.country
             };
         } catch (error) {
             console.error('Error getting location details:', error);
@@ -191,14 +189,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 city: "New York",
                 region: "New York",
-                country: "United States"
             };
         }
     }
 
     /**
      * Get weather data for a location using OpenWeatherMap API
-     * @param {Object} locationData Location data object with city, region, country
+     * @param {Object} locationData Location data object with city and region
      * @returns {Promise} Promise that resolves to weather object
      */
     async function getWeatherData(locationData) {
@@ -260,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mockData = getMockWeatherData();
         
         // Update displays
-        locationDisplay.textContent = 'Random Weather (Debug Mode)';
+        locationDisplay.textContent = 'Debug Mode';
         weatherDisplay.textContent = `${mockData.temperature}°F, ${mockData.condition}`;
         
         // Apply animations based on the random weather
@@ -292,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentWeatherData = weatherData;
         
         // Update the weather display
-        locationDisplay.textContent = 'Custom Weather (Debug Mode)';
+        locationDisplay.textContent = 'Debug Mode';
         weatherDisplay.textContent = `${weatherData.temperature}°F, ${weatherData.condition}`;
         
         // Apply the weather animations
