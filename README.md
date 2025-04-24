@@ -1,6 +1,8 @@
-# Weather Vibe Check
+![image](assets/blurb-image.png)
 
-A simple web application that displays animated backgrounds based on your local weather conditions. The app uses your IP address to determine your location, then fetches the weather data and displays a visually appealing animation that matches the current weather conditions.
+# Moodcast.us
+
+The first vibes-based weather forecasting, unencumbered by pesky numbers and data. Visit now to perform a vibe check on your local weather, and see a meteorological synopsis condensed into colors and a single word.
 
 ## Features
 
@@ -15,11 +17,12 @@ A simple web application that displays animated backgrounds based on your local 
 ## Technology Stack
 
 - HTML5
-- CSS3 (with advanced animations)
+- CSS3
 - JavaScript (ES6+)
 - Public APIs:
-  - ipapi.co for IP-based geolocation
-  - OpenWeatherMap for weather data
+  - GeoJS - IP-based geolocation
+  - OpenWeatherMap - weather data
+  - Zippopotamus - zip code lookup
 
 ## Getting Started
 
