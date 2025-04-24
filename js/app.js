@@ -178,9 +178,16 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Raw location data:", data);
             
             // Format the response to match our expected structure
+            let region = data.region_code;
+            
+            // If region_code is not available, convert the full region name to abbreviation
+            if (!region && data.region) {
+                region = getStateAbbreviation(data.region);
+            }
+            
             return {
                 city: data.city,
-                region: data.region,
+                region: region || "Unknown" // Fallback if we can't get or convert the region
             };
         } catch (error) {
             console.error('Error getting location details:', error);
@@ -189,9 +196,83 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Using default location data");
             return {
                 city: "New York",
-                region: "New York",
+                region: "NY",
             };
         }
+    }
+    
+    /**
+     * Convert full state name to two-letter abbreviation
+     * @param {string} stateName The full state name to convert
+     * @returns {string} Two-letter state abbreviation or original input if not found
+     */
+    function getStateAbbreviation(stateName) {
+        if (!stateName) return "Unknown";
+        
+        // State names to abbreviations mapping
+        const stateMap = {
+            'alabama': 'AL',
+            'alaska': 'AK',
+            'arizona': 'AZ',
+            'arkansas': 'AR',
+            'california': 'CA',
+            'colorado': 'CO',
+            'connecticut': 'CT',
+            'delaware': 'DE',
+            'florida': 'FL',
+            'georgia': 'GA',
+            'hawaii': 'HI',
+            'idaho': 'ID',
+            'illinois': 'IL',
+            'indiana': 'IN',
+            'iowa': 'IA',
+            'kansas': 'KS',
+            'kentucky': 'KY',
+            'louisiana': 'LA',
+            'maine': 'ME',
+            'maryland': 'MD',
+            'massachusetts': 'MA',
+            'michigan': 'MI',
+            'minnesota': 'MN',
+            'mississippi': 'MS',
+            'missouri': 'MO',
+            'montana': 'MT',
+            'nebraska': 'NE',
+            'nevada': 'NV',
+            'new hampshire': 'NH',
+            'new jersey': 'NJ',
+            'new mexico': 'NM',
+            'new york': 'NY',
+            'north carolina': 'NC',
+            'north dakota': 'ND',
+            'ohio': 'OH',
+            'oklahoma': 'OK',
+            'oregon': 'OR',
+            'pennsylvania': 'PA',
+            'rhode island': 'RI',
+            'south carolina': 'SC',
+            'south dakota': 'SD',
+            'tennessee': 'TN',
+            'texas': 'TX',
+            'utah': 'UT',
+            'vermont': 'VT',
+            'virginia': 'VA',
+            'washington': 'WA',
+            'west virginia': 'WV',
+            'wisconsin': 'WI',
+            'wyoming': 'WY',
+            'district of columbia': 'DC',
+            'american samoa': 'AS',
+            'guam': 'GU',
+            'northern mariana islands': 'MP',
+            'puerto rico': 'PR',
+            'united states minor outlying islands': 'UM',
+            'u.s. virgin islands': 'VI',
+        };
+        
+        // Try to match the state name (case-insensitive)
+        const normalizedStateName = stateName.toLowerCase().trim();
+        return stateMap[normalizedStateName] || stateName; // Return original if no match
     }
 
     /**
