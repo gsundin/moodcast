@@ -283,7 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getWeatherData(locationData) {
         try {
             // Get API key from external config file
-            const apiKey = OPENWEATHER_API_KEY;
+            const apiKey = atob("ZjlmYTI4YWQxMmNjYjNmZjkyNDFiZTlkOWMzZWEzMjI=");
+            //const apiKey = 'f5d928ad12ccb3ff9241be9d9c3ea322';
             
             // Use city name for simplicity with proper encoding
             const encodedCity = encodeURIComponent(locationData.city);
