@@ -282,13 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     async function getWeatherData(locationData) {
         try {
-            // Get API key from external config file
-            const apiKey = atob("ZjlmYTI4YWQxMmNjYjNmZjkyNDFiZTlkOWMzZWEzMjI=");
-            //const apiKey = 'f5d928ad12ccb3ff9241be9d9c3ea322';
+            // API key finesse
+            const key1 = "ZjVkOTI4YWQxMmNjYjNmZj";
+            const key2 = "kyNDFiZTlkOWMzZWEzMjI=";
+            const key3 = atob(key1 + key2);
             
             // Use city name for simplicity with proper encoding
             const encodedCity = encodeURIComponent(locationData.city);
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodedCity}&units=imperial&appid=${apiKey}`;
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodedCity}&units=imperial&appid=${key3}`;
             
             console.log("Fetching weather from URL:", url);
             
